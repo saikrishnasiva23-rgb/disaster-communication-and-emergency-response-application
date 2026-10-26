@@ -1,0 +1,54 @@
+name: disaster_communication_app
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  geolocator: ^11.1.0
+  google_maps_flutter: ^2.7.0
+  flutter_blue_plus: ^1.35.5
+  http: ^1.2.2
+  url_launcher: ^6.3.1
+  flutter_ble_peripheral: ^3.1.0
+
+  # Phase 2 (Windows Rescue Team): BLE Central/GATT-client role for the
+  # Windows Rescue laptop. flutter_blue_plus (used by BleCentralService,
+  # the Affected Person's existing central role) has no Windows platform
+  # implementation -- see ble_central_service.dart. This is a different
+  # plugin from the same publisher as flutter_ble_peripheral, chosen
+  # because it declares real Windows GATT-client support instead of
+  # pretending flutter_blue_plus already covers Windows.
+  flutter_ble_central: ^1.1.0
+
+  # Phase 2: centralized app state read/written from independently-pushed
+  # screens (BLE connection, SOS, auth, audit log).
+  provider: ^6.1.2
+
+  # Phase 2: Rescue ID/password storage, so the credential is never a
+  # hardcoded literal comparison in Dart source.
+  flutter_secure_storage: ^9.2.2
+
+  # Phase 13: SHA-256 for the tamper-evident event log hash chain.
+  crypto: ^3.0.5
+
+  # Multi-hop mesh: app support directory for the persistent outbox,
+  # relay store-and-forward queue, dedup cache, rescue inbox and audit chain
+  # (LocalStore). Already resolved transitively; now a direct dependency.
+  path_provider: ^2.1.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

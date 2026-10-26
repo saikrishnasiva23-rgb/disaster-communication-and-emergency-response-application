@@ -1,0 +1,6 @@
+# Only for the old Flask server (legacy_flask_app.py), kept for reference.
+# The FastAPI app serves the same /api/rescue-request(s) endpoints.
+flask>=3.1,<4
+flask-cors>=6.0,<7
+scikit-learn>=1.9,<2
+pandas>=3.0,<4

@@ -1,0 +1,39 @@
+# Local production-like stack: API + PostgreSQL.
+#   JWT_SECRET=$(python -c "import secrets;print(secrets.token_urlsafe(48))") \
+#   POSTGRES_PASSWORD=change-me docker compose up --build
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: disaster
+      POSTGRES_USER: disaster
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U disaster -d disaster"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ENVIRONMENT: production
+      DATABASE_URL: postgresql://disaster:${POSTGRES_PASSWORD}@db:5432/disaster
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET (32+ characters)}
+      CORS_ORIGINS: ${CORS_ORIGINS:-}
+      LEGACY_API_ENABLED: ${LEGACY_API_ENABLED:-false}
+      INITIAL_ADMIN_USERNAME: ${INITIAL_ADMIN_USERNAME:-}
+      INITIAL_ADMIN_PASSWORD: ${INITIAL_ADMIN_PASSWORD:-}
+      PORT: 8000
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+volumes:
+  pgdata:
